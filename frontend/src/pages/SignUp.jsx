@@ -26,17 +26,34 @@ const SignUp = () => {
     e.preventDefault();
   };
 
+  const handleUploadPic = (e) => {
+    const file = e.target.files[0];
+    console.log(file)
+  }
+
   //console.log("data login ", data);
 
   return (
-    <section id="login">
-      <div className="mx-auto container p-4">
+    <section id="signup">
+      <div className="mx-auto container p-4 ">
         <div className="bg-white p-5 py-5 w-full max-w-sm mx-auto">
-          <div className="w-20 h-20 mx-auto">
-            <img src={loginIcons} alt="login icon" />
+          <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
+            <div>
+             <img src={loginIcons} alt="login icons" />
+            </div>
+             <form>
+               <label>
+               <div className="text-xs bg-opacity-80 bg-slate-200 pb-4 pt-2 cursor-pointer text-center absolute bottom-0 w-full">
+              upload photo
+            </div>
+            <input type="file" className="hidden" onChange={handleUploadPic}/>
+               </label>
+             </form>
           </div>
+
           <form className="pt-6 flex flex-col gap-2" onSubmit={handleSubmit}>
             <div className="grid">
+              
               <label>Name: </label>
               <div className="bg-slate-200 p-2 rounded">
                 <input
