@@ -2,6 +2,7 @@ import { useState } from "react";
 import loginIcons from "../../assest/signin.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import imageToBase64 from "../helpers/imageTobase64";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,9 +27,21 @@ const SignUp = () => {
     e.preventDefault();
   };
 
-  const handleUploadPic = (e) => {
+  const handleUploadPic = async(e) => {
     const file = e.target.files[0];
-    console.log(file)
+    
+    const imagePic = await imageToBase64(file);
+
+    setData((prev) => {
+      return{
+          ...prev,
+          profilePic : imagePic
+      }
+    })
+
+    // console.log("image pic", imagePic);
+
+    // console.log(file)
   }
 
   //console.log("data login ", data);
@@ -39,7 +52,7 @@ const SignUp = () => {
         <div className="bg-white p-5 py-5 w-full max-w-sm mx-auto">
           <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
             <div>
-             <img src={loginIcons} alt="login icons" />
+             <img src={data.profilePic ? data.profilePic : loginIcons} alt="login icons" />
             </div>
              <form>
                <label>

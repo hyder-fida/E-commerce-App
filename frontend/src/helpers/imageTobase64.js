@@ -24,4 +24,6 @@ const imageToBase64 = async (image) => {
     // Return the base64 representation of the image
     return data;
   };
+
+  export default imageToBase64;
   
