@@ -18,7 +18,7 @@ const Header = () => {
           <input
             type="text"
             placeholder="search  product here..."
-            className="w-full  "
+            className="w-full "
           />
           <div className="text-lg min-w-[50px] h-8 bg-red-600 flex items-center justify-center rounded-r-full">
             <GrSearch />

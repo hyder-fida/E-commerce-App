@@ -3,6 +3,7 @@ import loginIcons from "../../assest/signin.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import imageToBase64 from "../helpers/imageTobase64";
+import SummaryApi from "../common";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,9 +11,9 @@ const SignUp = () => {
   const [data, setData] = useState({
     email: "",
     password: "",
-    name: '',
-    confirmPassword:'',
-    profilePic: '' 
+    name: "",
+    confirmPassword: "",
+    profilePic: "",
   });
 
   const handleOnChange = (e) => {
@@ -23,26 +24,42 @@ const SignUp = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (data.password === data.confirmPassword) {
+      const response = await fetch(SummaryApi.signUp.url, {
+        method: SummaryApi.signUp.method,
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+
+      console.log("data", responseData);
+    } else { 
+      console.log("Please check password and confirm password");
+    }
   };
 
-  const handleUploadPic = async(e) => {
+  const handleUploadPic = async (e) => {
     const file = e.target.files[0];
-    
+
     const imagePic = await imageToBase64(file);
 
     setData((prev) => {
-      return{
-          ...prev,
-          profilePic : imagePic
-      }
-    })
+      return {
+        ...prev,
+        profilePic: imagePic,
+      };
+    });
 
     // console.log("image pic", imagePic);
 
     // console.log(file)
-  }
+  };
 
   //console.log("data login ", data);
 
@@ -52,21 +69,27 @@ const SignUp = () => {
         <div className="bg-white p-5 py-5 w-full max-w-sm mx-auto">
           <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
             <div>
-             <img src={data.profilePic ? data.profilePic : loginIcons} alt="login icons" />
+              <img
+                src={data.profilePic ? data.profilePic : loginIcons}
+                alt="login icons"
+              />
             </div>
-             <form>
-               <label>
-               <div className="text-xs bg-opacity-80 bg-slate-200 pb-4 pt-2 cursor-pointer text-center absolute bottom-0 w-full">
-              upload photo
-            </div>
-            <input type="file" className="hidden" onChange={handleUploadPic}/>
-               </label>
-             </form>
+            <form>
+              <label>
+                <div className="text-xs bg-opacity-80 bg-slate-200 pb-4 pt-2 cursor-pointer text-center absolute bottom-0 w-full">
+                  upload photo
+                </div>
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleUploadPic}
+                />
+              </label>
+            </form>
           </div>
 
           <form className="pt-6 flex flex-col gap-2" onSubmit={handleSubmit}>
             <div className="grid">
-              
               <label>Name: </label>
               <div className="bg-slate-200 p-2 rounded">
                 <input
@@ -126,12 +149,15 @@ const SignUp = () => {
                   value={data.confirmPassword}
                   onChange={handleOnChange}
                   className="w-full h-full outline-none bg-transparent"
+                  autocomplete="new-password"
                 />
                 <div
                   className="cursor-pointer text-xl"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                 >
-                  <span>{showConfirmPassword ? <FaEyeSlash /> : <FaEye />}</span>
+                  <span>
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
                 </div>
               </div>
             </div>
@@ -146,7 +172,7 @@ const SignUp = () => {
               to="/login"
               className="text-red-600 hover:text-red-700 hover:underline"
             >
-             Login
+              Login
             </Link>
           </p>
         </div>
