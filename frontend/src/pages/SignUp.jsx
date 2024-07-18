@@ -1,9 +1,10 @@
 import { useState } from "react";
 import loginIcons from "../../assest/signin.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import imageToBase64 from "../helpers/imageTobase64";
 import SummaryApi from "../common";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,6 +16,8 @@ const SignUp = () => {
     confirmPassword: "",
     profilePic: "",
   });
+
+  const navigate = useNavigate()
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -35,11 +38,21 @@ const SignUp = () => {
         },
         body: JSON.stringify(data),
       });
-
       const responseData = await response.json();
 
-      console.log("data", responseData);
-    } else { 
+      if (responseData.success) {
+        toast.success(responseData.message);
+        navigate('/login');
+      }
+
+      if (responseData.error) {
+        toast.error(responseData.message);
+      }
+
+      toast(responseData.message);
+
+      //console.log("data", responseData);
+    } else {
       console.log("Please check password and confirm password");
     }
   };
@@ -149,7 +162,7 @@ const SignUp = () => {
                   value={data.confirmPassword}
                   onChange={handleOnChange}
                   className="w-full h-full outline-none bg-transparent"
-                  autocomplete="new-password"
+                  autoComplete="new-password"
                 />
                 <div
                   className="cursor-pointer text-xl"
