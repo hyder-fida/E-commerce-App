@@ -17,7 +17,7 @@ const SignUp = () => {
     profilePic: "",
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -31,50 +31,48 @@ const SignUp = () => {
     e.preventDefault();
 
     if (data.password === data.confirmPassword) {
-      const response = await fetch(SummaryApi.signUp.url, {
-        method: SummaryApi.signUp.method,
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
+      try {
+        const response = await fetch(SummaryApi.signUp.url, {
+          method: SummaryApi.signUp.method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        const responseData = await response.json();
+
+        if (responseData.success) {
+          toast.success(responseData.message);
+          navigate('/login');
+        } else {
+          toast.error(responseData.message);
+        }
+      } catch (error) {
+        toast.error("An error occurred. Please try again.");
+      }
+
+      setData({
+        email: "",
+        password: "",
+        name: "",
+        confirmPassword: "",
+        profilePic: "",
       });
-      const responseData = await response.json();
-
-      if (responseData.success) {
-        toast.success(responseData.message);
-        navigate('/login');
-      }
-
-      if (responseData.error) {
-        toast.error(responseData.message);
-      }
-
-      toast(responseData.message);
-
-      //console.log("data", responseData);
     } else {
-      console.log("Please check password and confirm password");
+      toast.error("Please check password and confirm password");
     }
   };
 
   const handleUploadPic = async (e) => {
     const file = e.target.files[0];
-
     const imagePic = await imageToBase64(file);
 
-    setData((prev) => {
-      return {
-        ...prev,
-        profilePic: imagePic,
-      };
-    });
-
-    // console.log("image pic", imagePic);
-
-    // console.log(file)
+    setData((prev) => ({
+      ...prev,
+      profilePic: imagePic,
+    }));
   };
-
-  //console.log("data login ", data);
 
   return (
     <section id="signup">
